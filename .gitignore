@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# Python
+.ipynb_checkpoints/
+
+# Custom
+data/*
+!data/diary.csv
