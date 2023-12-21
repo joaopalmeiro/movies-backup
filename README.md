@@ -1,5 +1,7 @@
 # letterboxd-playground
 
+Stats and charts from my [Letterboxd](https://letterboxd.com/) movie history.
+
 - [Letterboxd profile](https://letterboxd.com/joaopalmeiro/)
 
 ## Development
