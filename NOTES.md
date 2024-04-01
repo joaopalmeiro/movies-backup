@@ -1,6 +1,7 @@
 # Notes
 
 - https://letterboxd.com/api-beta/
+- https://letterboxd.com/settings/data/
 - https://api-docs.letterboxd.com/
 - [Rows](https://rows.com/docs) documentation:
   - [Charts](https://rows.com/docs/category/charts): [Inserting and editing charts](https://rows.com/docs/ch-inserting-editing-charts?category=charts) page
@@ -8,6 +9,8 @@
 - https://rows.com/share/my-letterboxd-10wBKefPuzblIiLcelgERRcNnjh8JeTXmUuVz5RgzQEa
 - "Stats and charts from my [Letterboxd](https://letterboxd.com/) movie history."
 - https://github.com/joaopalmeiro/podcasts-backup
+- https://github.com/Dashron/letterboxd-client:
+  - https://github.com/Dashron/letterboxd-client/blob/1.0.1/src/index.ts#L80
 
 ## Snippets
 
