@@ -11,6 +11,13 @@
 - https://github.com/joaopalmeiro/podcasts-backup
 - https://github.com/Dashron/letterboxd-client:
   - https://github.com/Dashron/letterboxd-client/blob/1.0.1/src/index.ts#L80
+- Moon chart:
+  - https://thefunctionalart.blogspot.com/2019/06/concentric-bubble-charts-are-terrible.html
+  - https://eagereyes.org/blog/2019/two-short-papers-on-part-to-whole-charts-at-eurovis
+  - https://eagereyes.org/publications/Kosara-EuroVis-2019a
+  - https://cran.r-project.org/web/packages/gggibbous/vignettes/gggibbous.html
+  - https://en.wikipedia.org/wiki/Lunar_phase#/media/File:Moon_Phase_Diagram_for_Simple_English_Wikipedia.GIF
+- https://www.svgviewer.dev/
 
 ## Snippets
 
@@ -132,4 +139,71 @@
   "nbformat": 4,
   "nbformat_minor": 5
 }
+```
+
+### Moon chart
+
+```python
+import altair as alt
+import pandas as pd
+
+# 1. Improved SVG Generator for Altair 6
+def get_moon_path(ratio):
+    """Generates an SVG path for a moon phase (0.0 to 1.0)."""
+    # Outer semicircle (Right side)
+    outer = "M 0,-1 A 1,1 0 0,1 0,1"
+    # Inner terminator arc (Varies with ratio)
+    x_rad = abs(1 - 2 * ratio)
+    sweep = 1 if ratio > 0.5 else 0
+    inner = f"A {x_rad},1 0 0,{sweep} 0,-1"
+    return f"{outer} {inner} Z"
+
+def get_moon_svg(ratio):
+    moon_path = get_moon_path(ratio)
+    # Stroke: stroke="white" stroke-width="0.01"
+    return f'<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="-1 -1 2 2"><path d="{moon_path}" fill="black"/></svg>'
+
+# 2. Data Preparation
+data = pd.DataFrame({
+    'date': pd.date_range('2026-03-11', periods=7),
+    'illumination': [0.1, 0.25, 0.45, 0.5, 0.65, 0.85, 0.98],
+    'phase': ['Crescent', 'Crescent', 'First Quarter', 'Half', 'Gibbous', 'Gibbous', 'Full']
+})
+data['path'] = data['illumination'].apply(get_moon_path)
+data['svg'] = data['illumination'].apply(get_moon_svg)
+
+print(data)
+
+# 3. Altair 6 Chart
+# Base layer uses datum(0) to keep all moons on the same horizontal line
+base = alt.Chart(data).encode(
+    x=alt.X('date:T', title='March 2026'),
+    y=alt.YValue(100) # Altair 6: Direct pixel or value placement without a dummy column
+)
+
+# Dark Background layer
+dark = base.mark_point(
+    size=2500, filled=True, color='#283747', stroke="white", strokeWidth=1
+).encode(shape=alt.value('circle'))
+
+# Lit Foreground layer
+lit = base.mark_point(
+    size=2500, filled=True, color='#F7DC6F', stroke="white", strokeWidth=1
+).encode(
+    shape=alt.Shape('path:N', scale=None), # Uses the pre-calculated SVG string
+    tooltip=['phase', 'illumination']
+)
+
+# Combine and refine
+chart = (dark + lit).properties(
+    width=700,
+    height=150,
+    title="Lunar Cycle - March 2026"
+).configure_view(
+    stroke=None # Cleaner look for charts without axes
+).configure_axis(
+    grid=False
+)
+
+chart.show()
 ```
